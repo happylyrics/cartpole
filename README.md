@@ -1,0 +1,2 @@
+#require
+pip install gymnasium
