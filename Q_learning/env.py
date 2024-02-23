@@ -2,18 +2,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
 import gymnasium as gym
+
 from agent import Agent
 
 # 最大のステップ数
 MAX_STEPS = 200
 # 最大の試行回数
-NUM_EPISODES = 1000
+NUM_EPISODES = 3000
 
 
 class Environment():
     def __init__(self, toy_env):
         # 環境を生成
-        self.env = gym.make(toy_env)
+        self.env = gym.make(toy_env,render_mode='rgb_array')
         # 状態数を取得
         num_states = self.env.observation_space.shape[0]
         # 行動数を取得
@@ -29,7 +30,7 @@ class Environment():
 
         # 試行数分繰り返す
         for episode in range(NUM_EPISODES):
-            observation, info = self.env.reset()  # 環境の初期化
+            observation, _ = self.env.reset()  # 環境の初期化
             if episode == NUM_EPISODES-1:
                 print("last")
                 es = np.arange(0, len(step_list))
@@ -38,15 +39,15 @@ class Environment():
             for step in range(MAX_STEPS):
                 # 最後の試行のみ画像を保存する。
                 if is_episode_final:
-                    frames.append(self.env.render(mode='rgb_array'))
+                    frames.append(self.env.render())
 
                 # 行動を求める
                 action = self.agent.get_action(observation, episode)
                 # 行動a_tの実行により、s_{t+1}, r_{t+1}を求める
-                observation_next, _, done, _, _ = self.env.step(action)
+                observation_next, _, done, done2, _ = self.env.step(action)
 
                 # 報酬を与える
-                if done:  # ステップ数が200経過するか、一定角度以上傾くとdoneはtrueになる
+                if done or done2:  # ステップ数が200経過するか、一定角度以上傾くとdoneはtrueになる
                     if step <195:
                         reward = -1  # 失敗したので-1の報酬を与える
                         complete_episodes = 0  # 成功数をリセット
@@ -61,7 +62,7 @@ class Environment():
                 observation = observation_next
 
                 # 終了時の処理
-                if done:
+                if done or done2:
                     step_list.append(step+1)
                     break
 
