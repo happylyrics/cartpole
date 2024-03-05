@@ -8,7 +8,7 @@ from agent import Agent
 # 最大のステップ数
 MAX_STEPS = 200
 # 最大の試行回数
-NUM_EPISODES = 3000
+NUM_EPISODES = 1000
 
 
 class Environment():
@@ -77,9 +77,9 @@ class Environment():
                 def animate(i):
                     patch.set_data(frames[i])
 
-                anim = animation.FuncAnimation(plt.gcf(), animate, frames=len(frames),
-                                                interval=50)
-                anim.save('movie_cartpole_v0.mp4', "ffmpeg")
+                #anim = animation.FuncAnimation(plt.gcf(), animate, frames=len(frames),
+                                                #interval=50)
+                #anim.save('movie_cartpole_v0.mp4', "ffmpeg")
                 print("終了")
                 break
 
